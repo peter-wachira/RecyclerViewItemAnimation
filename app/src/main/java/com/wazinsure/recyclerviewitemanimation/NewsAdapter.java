@@ -16,6 +16,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     Context mContext;
     List<NewsItem>mData;
 
+    public NewsAdapter(MainActivity mainActivity, List<NewsItem> mData) {
+    }
+
 
     @NonNull
     @Override
@@ -35,9 +38,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     }
 
+
+
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData== null ? 0 : mData.size();
     }
 
     public  class NewsViewHolder extends RecyclerView.ViewHolder{
@@ -48,7 +53,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_title = itemView.findViewById(R.id.tv_title);
-            tv_content = itemView.findViewById(R.id.tv_content);
+            tv_content = itemView.findViewById(R.id.tv_description);
             tv_date = itemView.findViewById(R.id.tv_date);
             img_user = itemView.findViewById(R.id.img_user);
         }

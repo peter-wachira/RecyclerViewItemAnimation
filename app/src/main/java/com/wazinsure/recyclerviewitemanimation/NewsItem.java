@@ -1,17 +1,36 @@
 package com.wazinsure.recyclerviewitemanimation;
 
+
 public class NewsItem {
+
 
     String Title,Content,Date;
     int userPhoto;
-    public NewsItem(){
 
+    public NewsItem() {
     }
+
 
     public NewsItem(String title, String content, String date, int userPhoto) {
         Title = title;
         Content = content;
         Date = date;
+        this.userPhoto = userPhoto;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public void setContent(String content) {
+        Content = content;
+    }
+
+    public void setDate(String date) {
+        Date = date;
+    }
+
+    public void setUserPhoto(int userPhoto) {
         this.userPhoto = userPhoto;
     }
 
@@ -27,27 +46,7 @@ public class NewsItem {
         return Date;
     }
 
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public void setContent(String content) {
-        Content = content;
-    }
-
-
-
-    public void setDate(String date) {
-        Date = date;
-    }
-
-    public void setUserPhoto(int userPhoto) {
-        this.userPhoto = userPhoto;
-    }
-
     public int getUserPhoto() {
         return userPhoto;
     }
-
-
 }
