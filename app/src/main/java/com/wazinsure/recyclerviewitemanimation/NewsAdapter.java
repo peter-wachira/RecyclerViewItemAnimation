@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,16 +14,32 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder>{
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> implements Filterable {
+
+
+
     Context mContext;
     List<NewsItem>mData;
+    List<NewsItem>mDataFiltrered;
 
+    boolean  isDark = false;
+
+    public NewsAdapter(Context mContext, List<NewsItem> mData, boolean isDark) {
+        this.mContext = mContext;
+        this.mData = mData;
+        this.isDark = isDark;
+        this.mDataFiltrered =mData;
+    }
     public NewsAdapter(Context mContext, List<NewsItem> mData) {
         this.mContext = mContext;
         this.mData = mData;
+        this.isDark = isDark;
+        this.mDataFiltrered = mData;
     }
+
 
 
     @NonNull
@@ -44,10 +62,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
        newsViewHolder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.fade_scale_animation));
 
 
-        newsViewHolder.tv_title.setText(mData.get(position).getTitle());
-        newsViewHolder.tv_content.setText(mData.get(position).getContent());
-        newsViewHolder.tv_date.setText(mData.get(position).getDate());
-        newsViewHolder.img_user.setImageResource(mData.get(position).getUserPhoto());
+        newsViewHolder.tv_title.setText(mDataFiltrered.get(position).getTitle());
+        newsViewHolder.tv_content.setText(mDataFiltrered.get(position).getContent());
+        newsViewHolder.tv_date.setText(mDataFiltrered.get(position).getDate());
+        newsViewHolder.img_user.setImageResource(mDataFiltrered.get(position).getUserPhoto());
 
     }
 
@@ -55,7 +73,38 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mDataFiltrered.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter(){
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String Key = constraint.toString();
+                if(Key.isEmpty()){
+                    mDataFiltrered = mData;
+                }else{
+                    List<NewsItem> lstFiltered = new ArrayList<>();
+                    for (NewsItem row: mData){
+                        if (row.getTitle().toLowerCase().contains(Key.toLowerCase())){
+                            lstFiltered.add(row);
+                        }
+                    }
+                    mDataFiltrered = lstFiltered;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mDataFiltrered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults results) {
+                mDataFiltrered= (List<NewsItem>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public  class NewsViewHolder extends RecyclerView.ViewHolder{
@@ -72,6 +121,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             tv_content = itemView.findViewById(R.id.tv_description);
             tv_date = itemView.findViewById(R.id.tv_date);
             img_user = itemView.findViewById(R.id.img_user);
+
+            if (isDark) {
+                setDarkTheme();
+            }
+            }
+
+        private void setDarkTheme (){
+            container.setBackgroundResource(R.drawable.card_bg_dark);
         }
+        }
+
     }
-}
+
